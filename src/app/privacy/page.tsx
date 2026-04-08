@@ -1,5 +1,6 @@
-export const dynamic = "force-dynamic";
 "use client";
+
+export const dynamic = "force-dynamic";
 
 import { motion } from "framer-motion";
 import { ShieldCheck, Lock, Eye, FileText, ChevronRight } from "lucide-react";
