@@ -11,12 +11,12 @@ import 'sileo/styles.css';
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
+  weight: ["300", "400", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Ahmed Fayyaz | Software Engineer",
-  description: "Software Engineer specializing in Frontend Development and MERN Stack.",
+  title: "M. Rayan Arif | Senior Backend Engineer & AI Systems Architect",
+  description: "Senior Backend Engineer and AI Systems Architect with 5 years of experience. Specializing in Python, Django, FastAPI, multi-agent AI systems, and LLM integrations.",
 };
 
 export default function RootLayout({
@@ -26,17 +26,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body className={clsx(nunitoSans.variable, "antialiased bg-theme-dark overflow-x-hidden w-full min-h-screen text-white selection:bg-accent-mint/30")}>
+      <body className={clsx(nunitoSans.variable, "antialiased bg-theme-dark overflow-x-hidden w-full min-h-screen text-white selection:bg-accent-mint/20")}>
         <NextTopLoader
-          color="#33D69F"
+          color="#FF3355"
           initialPosition={0.08}
           crawlSpeed={200}
-          height={3}
+          height={2}
           crawl={true}
           showSpinner={false}
           easing="ease"
           speed={200}
-          shadow="0 0 10px #33D69F,0 0 5px #33D69F"
+          shadow="0 0 10px #FF3355,0 0 5px #FF3355"
         />
         <Toaster
           position="bottom-right"
@@ -44,7 +44,6 @@ export default function RootLayout({
             fill: "#ffffffff",
             roundness: 16,
             styles: {
-
               title: "text-black font-sans!",
               description: "text-black/80 font-sans!",
               badge: "bg-black/10!",

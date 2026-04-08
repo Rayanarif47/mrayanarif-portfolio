@@ -5,67 +5,79 @@ import { motion, useInView } from "framer-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const AnimatedCounter = ({ value }: { value: number }) => {
-    const ref = useRef<HTMLSpanElement>(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-    const [count, setCount] = useState(0);
+const AnimatedCounter = ({ value, suffix = "" }: { value: number; suffix?: string }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
 
-    useEffect(() => {
-        if (isInView) {
-            let start = 0;
-            const duration = 1800;
-            const stepTime = Math.abs(Math.floor(duration / value));
+  useEffect(() => {
+    if (isInView) {
+      let start = 0;
+      const duration = 1600;
+      const stepTime = Math.max(Math.floor(duration / value), 1);
 
-            const timer = setInterval(() => {
-                start += 1;
-                setCount(start);
-                if (start >= value) {
-                    setCount(value);
-                    clearInterval(timer);
-                }
-            }, stepTime || 1);
-
-            return () => clearInterval(timer);
+      const timer = setInterval(() => {
+        start += 1;
+        setCount(start);
+        if (start >= value) {
+          setCount(value);
+          clearInterval(timer);
         }
-    }, [value, isInView]);
+      }, stepTime);
 
-    return <span ref={ref}>{count}</span>;
+      return () => clearInterval(timer);
+    }
+  }, [value, isInView]);
+
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  );
 };
 
+const STATS = [
+  { value: 5, suffix: "+", label: "Years Experience", sub: "Backend & AI" },
+  { value: 10, suffix: "+", label: "Production Projects", sub: "Shipped globally" },
+  { value: 4, suffix: "", label: "AI Frameworks", sub: "LangChain, LangGraph, CrewAI, IBM" },
+  { value: 15, suffix: "+", label: "Technologies", sub: "Across full stack" },
+];
+
 export const Stats = () => {
-    const stats = [
-        { label: "Production Apps", value: 10 },
-        { label: "Technologies Mastered", value: 15 },
-        { label: "Components Built", value: 120 },
-        { label: "Years Experience", value: 2 },
-    ];
+  return (
+    <section className="w-full py-10 px-6 md:px-12 max-w-7xl mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {STATS.map((stat, idx) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 30, scale: 0.94 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, delay: idx * 0.08, ease: EASE }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="group relative flex flex-col items-center justify-center p-7 bg-white/[0.02] rounded-2xl border border-white/[0.06] overflow-hidden hover:border-accent-mint/25 transition-all duration-300 cursor-default"
+          >
+            {/* Hover glow */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{ background: "radial-gradient(ellipse at center, rgba(255,51,85,0.06) 0%, transparent 70%)" }} />
 
-    return (
-        <section className="w-full py-5 px-6 md:px-12 max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                {stats.map((stat, idx) => (
-                    <motion.div
-                        key={stat.label}
-                        initial={{ opacity: 0, y: 40, scale: 0.88 }}
-                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                        viewport={{ once: true, margin: "-60px" }}
-                        transition={{ duration: 0.55, delay: idx * 0.09, ease: EASE }}
-                        whileHover={{ y: -4, transition: { duration: 0.25, ease: "easeOut" } }}
-                        className="flex flex-col items-center justify-center p-8 bg-theme-dark rounded-2xl border border-white/5 relative overflow-hidden group shadow-[inset_0_0_20px_rgba(255,255,255,0.01)] hover:border-accent-mint/25 hover:shadow-[0_0_30px_rgba(51,214,159,0.06)] transition-colors duration-300"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-br from-accent-mint/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <h4 className="text-4xl md:text-5xl font-black text-white mb-1 relative z-10">
+              <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+            </h4>
 
-                        <h4 className="text-4xl md:text-5xl font-bold text-white mb-2 relative z-10 flex items-center">
-                            <AnimatedCounter value={stat.value} />
-                            <span className="text-accent-mint ml-1">+</span>
-                        </h4>
+            <p className="text-sm font-bold text-text-secondary text-center relative z-10 mb-1">
+              {stat.label}
+            </p>
+            <p className="text-[10px] text-text-muted text-center relative z-10">
+              {stat.sub}
+            </p>
 
-                        <p className="text-sm md:text-base text-text-muted font-medium text-center relative z-10 w-full whitespace-nowrap overflow-hidden text-ellipsis">
-                            {stat.label}
-                        </p>
-                    </motion.div>
-                ))}
-            </div>
-        </section>
-    );
+            {/* Bottom accent */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-[2px] bg-accent-mint/0 group-hover:bg-accent-mint/60 transition-all duration-500 rounded-full" />
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
 };

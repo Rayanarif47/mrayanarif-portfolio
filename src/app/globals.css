@@ -1,34 +1,131 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-deep-green: #0B3D2E;
-  --color-dark-emerald: #0E5A45;
-  --color-accent-mint: #33D69F;
-  --color-soft-mint: #7FE8C7;
-  
-  --color-theme-dark: #071E2F;
-  --color-text-secondary: #C8E6DB;
-  --color-text-muted: #8FB8AC;
+  /* ── Red & Black Design System ── */
+  --color-deep-red: #2D0010;
+  --color-dark-red: #4D0018;
+  --color-accent-mint: #FF3355;      /* renamed in value only — red accent */
+  --color-soft-mint: #FF6B80;        /* lighter red */
+
+  /* Legacy aliases so old component classes still resolve */
+  --color-deep-green: #2D0010;
+  --color-dark-emerald: #4D0018;
+
+  --color-theme-dark: #080808;       /* near-black background */
+  --color-text-secondary: #D4D4D4;
+  --color-text-muted: #6B6B6B;
 
   --font-sans: var(--font-nunito-sans), sans-serif;
-
-  /* Sileo Toast Brand Consistency */
-  --sileo-state-success: #33D69F;
 }
 
 @layer utilities {
   .bg-grid-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
-  
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Gradient text utility */
+  .text-gradient-red {
+    background: linear-gradient(135deg, #ffffff 0%, #FF3355 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+
+  /* Glow utilities */
+  .glow-red {
+    box-shadow: 0 0 30px rgba(255, 51, 85, 0.4), 0 0 60px rgba(255, 51, 85, 0.15);
   }
+  .glow-red-sm {
+    box-shadow: 0 0 15px rgba(255, 51, 85, 0.3);
+  }
+
+  /* Float animation */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-float-slow {
+    animation: float 9s ease-in-out infinite;
+  }
+  .animate-float-delay {
+    animation: float 7s ease-in-out infinite 2s;
+  }
+
+  /* Shimmer sweep */
+  .animate-shimmer {
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(300%) skewX(-12deg); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulseRed {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 51, 85, 0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(255, 51, 85, 0); }
+}
+
+/* ── Scroll-triggered CSS animations ── */
+/* Elements with these classes animate when they enter the viewport */
+.scroll-fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scroll-fade-up.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-fade-left {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scroll-fade-left.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scroll-scale.in-view {
+  opacity: 1;
+  transform: scale(1);
 }
 
 body {
@@ -36,65 +133,33 @@ body {
   background-color: var(--color-theme-dark);
 }
 
-/* Base scroll smooth - Lenis support */
-html.lenis, html.lenis body {
-  height: auto;
-}
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
 
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
-}
-
-/* Custom Scrollbar Styles */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-theme-dark);
-}
-
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--color-theme-dark); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 214, 159, 0.3); /* accent-mint at 30% */
+  background: rgba(255, 51, 85, 0.35);
   border-radius: 9999px;
-  border: 2px solid var(--color-theme-dark); /* acts like padding */
 }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 51, 85, 0.65); }
+* { scrollbar-width: thin; scrollbar-color: rgba(255, 51, 85, 0.35) var(--color-theme-dark); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(51, 214, 159, 0.7); /* accent-mint brighter on hover */
-}
-
-/* Firefox compatibility */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(51, 214, 159, 0.5) var(--color-theme-dark);
-}
-/* Markdown & Content Formatting */
+/* ── Markdown / Blog Content ── */
 .markdown-content {
   color: var(--color-text-secondary);
-  line-height: 1.6;
-  font-size: 0.85rem;
+  line-height: 1.7;
+  font-size: 0.9rem;
   overflow-wrap: break-word;
-  word-wrap: break-word;
   word-break: break-word;
 }
 
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3 {
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
   color: white;
   font-weight: 900;
   text-transform: uppercase;
@@ -106,44 +171,35 @@ html.lenis, html.lenis body {
 .markdown-content h1 { font-size: 1.2rem; }
 .markdown-content h2 { font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.2rem; }
 .markdown-content h3 { font-size: 0.95rem; }
-
-.markdown-content p {
-  margin-bottom: 1.5rem;
-}
+.markdown-content p { margin-bottom: 1.5rem; }
 
 .markdown-content strong {
   color: var(--color-accent-mint);
   font-weight: 800;
 }
 
-.markdown-content ul, 
-.markdown-content ol {
+.markdown-content ul, .markdown-content ol {
   margin-bottom: 1.5rem;
   padding-left: 1.5rem;
 }
-
 .markdown-content ul { list-style-type: disc; }
 .markdown-content ol { list-style-type: decimal; }
-
-.markdown-content li {
-  margin-bottom: 0.5rem;
-}
+.markdown-content li { margin-bottom: 0.5rem; }
 
 .markdown-content pre {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 1.25rem;
+  border-radius: 1rem;
   padding: 1.5rem;
   margin: 2rem 0;
   overflow-x: auto;
-  max-width: 100%;
 }
 
 .markdown-content code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.875em;
   color: var(--color-accent-mint);
-  background: rgba(51, 214, 159, 0.05);
+  background: rgba(255, 51, 85, 0.07);
   padding: 0.2rem 0.4rem;
   border-radius: 0.4rem;
 }
@@ -163,7 +219,7 @@ html.lenis, html.lenis body {
 }
 
 .markdown-content blockquote {
-  border-left: 4px solid var(--color-accent-mint);
+  border-left: 3px solid var(--color-accent-mint);
   padding-left: 1.5rem;
   font-style: italic;
   margin: 2rem 0;
@@ -177,10 +233,7 @@ html.lenis, html.lenis body {
   font-weight: 600;
   transition: opacity 0.2s;
 }
-
-.markdown-content a:hover {
-  opacity: 0.8;
-}
+.markdown-content a:hover { opacity: 0.8; }
 
 .markdown-content table {
   width: 100%;
@@ -188,11 +241,9 @@ html.lenis, html.lenis body {
   margin: 2rem 0;
   display: block;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
-.markdown-content th,
-.markdown-content td {
+.markdown-content th, .markdown-content td {
   border: 1px solid rgba(255, 255, 255, 0.05);
   padding: 0.75rem;
   text-align: left;

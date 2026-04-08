@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { SplashScreen } from "@/components/SplashScreen";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 export const ClientLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
@@ -13,6 +14,7 @@ export const ClientLayoutWrapper = ({ children }: { children: React.ReactNode })
 
     return (
         <>
+            {!isAdmin && <ScrollProgress />}
             {!isAdmin && <SplashScreen />}
             {!isAdmin && <Navbar />}
             {!isAdmin && <WhatsAppButton />}
