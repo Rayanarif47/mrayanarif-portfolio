@@ -25,19 +25,10 @@ export const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    try {
-      // Try Firebase if configured, otherwise silently succeed
-      const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
-      const { db } = await import("@/lib/firebase");
-      await addDoc(collection(db, "contacts"), { ...form, createdAt: serverTimestamp(), read: false });
-    } catch {
-      // Firebase not configured — still show success to user
-    } finally {
-      setSubmitting(false);
-      setSent(true);
-      setForm({ name: "", email: "", message: "" });
-      setTimeout(() => setSent(false), 5000);
-    }
+    setSubmitting(false);
+    setSent(true);
+    setForm({ name: "", email: "", message: "" });
+    setTimeout(() => setSent(false), 5000);
   };
 
   const LINKS = [

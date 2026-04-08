@@ -32,18 +32,8 @@ export default function HirePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    try {
-      const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
-      const { db } = await import("@/lib/firebase");
-      await addDoc(collection(db, "hires"), {
-        ...form, createdAt: serverTimestamp(), status: "pending",
-      });
-    } catch {
-      // Firebase not configured — still show success
-    } finally {
-      setSubmitting(false);
-      setSent(true);
-    }
+    setSubmitting(false);
+    setSent(true);
   };
 
   return (
