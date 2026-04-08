@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { ArrowUpRight } from "lucide-react";
 
 interface ExperienceData {
@@ -64,16 +61,7 @@ const COMPANY_COLORS: Record<string, string> = {
 };
 
 export const Experience = () => {
-  const [experiences, setExperiences] = useState<ExperienceData[]>(FALLBACK);
-
-  useEffect(() => {
-    const q = query(collection(db, "experience"), orderBy("order", "asc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as ExperienceData));
-      if (data.length > 0) setExperiences(data);
-    });
-    return () => unsubscribe();
-  }, []);
+  const experiences = FALLBACK;
 
   return (
     <section id="experience" className="w-full py-20 px-6 md:px-12 max-w-7xl mx-auto scroll-mt-20">

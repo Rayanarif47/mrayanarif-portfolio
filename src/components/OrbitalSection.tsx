@@ -156,17 +156,15 @@ export const OrbitalSection = () => {
 
             {/* ── Connecting lines from badges to orb ── */}
             {ALL_BADGES.map((b) => (
-              <motion.line
+              <motion.path
                 key={`line-${b.label}`}
-                x1={b.cx}
-                y1={b.cy + BADGE_HALF + 2}
-                x2={ORB_CX}
-                y2={ORB_CY - 68}
-                stroke={hovered === b.label ? "#FF3355" : "url(#lineGrad)"}
+                d={`M ${b.cx} ${b.cy + BADGE_HALF + 2} L ${ORB_CX} ${ORB_CY - 68}`}
+                stroke={hovered === b.label ? "#FF3355" : "rgba(255,51,85,0.35)"}
                 strokeWidth={hovered === b.label ? 1.5 : 0.8}
                 strokeDasharray="4 6"
+                fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: hovered === b.label ? 1 : 0.6 }}
+                animate={{ pathLength: 1, opacity: hovered === b.label ? 1 : 0.5 }}
                 transition={{ duration: 1.2, delay: 0.3 }}
               />
             ))}

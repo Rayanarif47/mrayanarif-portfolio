@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, LayoutDashboard, MessageSquare, Briefcase, Settings, X, User as UserIcon, LayoutGrid, Rocket, FileText, PenTool } from "lucide-react";
+import { LogOut, LayoutDashboard, MessageSquare, Briefcase, Settings, X, LayoutGrid, Rocket, FileText, PenTool } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "firebase/auth";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db, auth } from "@/lib/firebase";
-import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 
 interface SidebarProps {
@@ -19,93 +14,24 @@ interface SidebarProps {
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
-    const { user } = useAuth();
 
-    const [unreadContacts, setUnreadContacts] = useState(0);
-    const [pendingHires, setPendingHires] = useState(0);
-
-    useEffect(() => {
-        const unsubContacts = onSnapshot(collection(db, "contacts"), (snapshot) => {
-            setUnreadContacts(snapshot.docs.filter(doc => !doc.data().read).length);
-        });
-
-        const unsubHires = onSnapshot(collection(db, "hires"), (snapshot) => {
-            setPendingHires(snapshot.docs.filter(doc => doc.data().status === "pending").length);
-        });
-
-        return () => {
-            unsubContacts();
-            unsubHires();
-        };
-    }, []);
-
-    const handleSignOut = async () => {
-        await signOut(auth);
+    const handleSignOut = () => {
         router.push("/login");
     };
 
     const navItems = [
-        {
-            label: "Dashboard",
-            description: "Main Overview",
-            href: "/admin/dashboard",
-            icon: LayoutDashboard,
-            badge: 0
-        },
-        {
-            label: "Projects",
-            description: "Manage Portfolio",
-            href: "/admin/dashboard/projects",
-            icon: LayoutGrid,
-            badge: 0
-        },
-        {
-            label: "Experience",
-            description: "Career Journey",
-            href: "/admin/dashboard/experience",
-            icon: Rocket,
-            badge: 0
-        },
-        {
-            label: "Blogs",
-            description: "Write Stories",
-            href: "/admin/dashboard/blogs",
-            icon: PenTool,
-            badge: 0
-        },
-        {
-            label: "Contacts",
-            description: "View Messages",
-            href: "/admin/dashboard/contacts",
-            icon: MessageSquare,
-            badge: unreadContacts
-        },
-        {
-            label: "Hire me's",
-            description: "Work Requests",
-            href: "/admin/dashboard/hire-me",
-            icon: Briefcase,
-            badge: pendingHires
-        },
-        {
-            label: "Resume",
-            description: "Career Assets",
-            href: "/admin/dashboard/resume",
-            icon: FileText,
-            badge: 0
-        },
-        {
-            label: "Settings",
-            description: "System Config",
-            href: "/admin/dashboard/settings",
-            icon: Settings,
-            badge: 0
-        },
+        { label: "Dashboard", description: "Main Overview", href: "/admin/dashboard", icon: LayoutDashboard, badge: 0 },
+        { label: "Projects", description: "Manage Portfolio", href: "/admin/dashboard/projects", icon: LayoutGrid, badge: 0 },
+        { label: "Experience", description: "Career Journey", href: "/admin/dashboard/experience", icon: Rocket, badge: 0 },
+        { label: "Blogs", description: "Write Stories", href: "/admin/dashboard/blogs", icon: PenTool, badge: 0 },
+        { label: "Contacts", description: "View Messages", href: "/admin/dashboard/contacts", icon: MessageSquare, badge: 0 },
+        { label: "Hire me's", description: "Work Requests", href: "/admin/dashboard/hire-me", icon: Briefcase, badge: 0 },
+        { label: "Resume", description: "Career Assets", href: "/admin/dashboard/resume", icon: FileText, badge: 0 },
+        { label: "Settings", description: "System Config", href: "/admin/dashboard/settings", icon: Settings, badge: 0 },
     ];
 
     return (
         <>
-            {/* Mobile Overlay */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
@@ -113,12 +39,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 />
             )}
 
-            {/* Sidebar Container */}
             <aside className={clsx(
                 "fixed md:sticky top-0 md:top-6 left-0 md:left-6 h-full md:h-[calc(100vh-48px)] flex z-50 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] bg-[#080808] border-r md:border border-white/5 md:rounded-[2rem] shadow-2xl",
                 isOpen ? "w-[280px] translate-x-0" : "w-[0] md:w-[64px] -translate-x-full md:translate-x-0"
             )}>
-                {/* Mobile Close Button */}
                 <AnimatePresence>
                     {isOpen && (
                         <motion.button
@@ -133,12 +57,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                     )}
                 </AnimatePresence>
 
-                {/* Content Container */}
                 <div className={clsx(
                     "w-full flex flex-col py-6 transition-all duration-300",
                     isOpen ? "overflow-hidden px-4" : "overflow-visible md:items-center px-2"
                 )}>
-                    {/* Brand/Logo Section (visible when open) */}
                     <AnimatePresence>
                         {isOpen && (
                             <motion.div
@@ -158,7 +80,6 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         )}
                     </AnimatePresence>
 
-                    {/* Nav Icons */}
                     <nav className={clsx(
                         "flex-1 w-full space-y-1.5 no-scrollbar transition-all",
                         isOpen ? "overflow-y-auto" : "overflow-visible"
@@ -187,10 +108,6 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                             "w-[18px] h-[18px] transition-transform duration-300",
                                             isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(51,214,159,0.5)]" : "group-hover:scale-110"
                                         )} />
-
-                                        {item.badge > 0 && !isOpen && (
-                                            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-accent-mint shadow-[0_0_8px_rgba(51,214,159,0.8)] z-10 animate-pulse border-2 border-[#080808]" />
-                                        )}
                                     </div>
 
                                     {isOpen && (
@@ -200,13 +117,6 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                         </div>
                                     )}
 
-                                    {item.badge > 0 && isOpen && (
-                                        <span className="px-2 py-0.5 rounded-lg bg-accent-mint/10 text-accent-mint text-[10px] font-black">
-                                            {item.badge}
-                                        </span>
-                                    )}
-
-                                    {/* Link indicator */}
                                     {isActive && (
                                         <motion.div
                                             layoutId="active-indicator"
@@ -214,14 +124,12 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                         />
                                     )}
 
-                                    {/* Tooltip for collapsed state */}
                                     {!isOpen && (
                                         <div className="absolute left-full ml-6 px-3 py-2 bg-[#0A0A0A] border border-white/10 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 translate-x-2 group-hover:translate-x-0 z-[100] shadow-2xl min-w-max">
                                             <div className="flex flex-col whitespace-nowrap">
                                                 <p className="font-black text-[10px] uppercase tracking-widest text-white">{item.label}</p>
                                                 <p className="text-[9px] text-accent-mint font-bold uppercase tracking-tight">{item.description}</p>
                                             </div>
-                                            {/* Tooltip Arrow */}
                                             <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#0A0A0A] border-l border-b border-white/10 rotate-45" />
                                         </div>
                                     )}
@@ -230,7 +138,6 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         })}
                     </nav>
 
-                    {/* Bottom Section - Sign Out */}
                     <div className={clsx("mt-auto w-full pt-4", isOpen ? "px-2" : "px-0")}>
                         <button
                             onClick={handleSignOut}
@@ -245,18 +152,6 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                 <div className="text-left">
                                     <p className="font-black text-[10px] uppercase tracking-widest">Terminate</p>
                                     <p className="text-[10px] opacity-60">Close Session</p>
-                                </div>
-                            )}
-
-                            {/* Tooltip for collapsed state */}
-                            {!isOpen && (
-                                <div className="absolute left-full ml-6 px-3 py-2 bg-[#1A0A0A] border border-red-500/10 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 translate-x-2 group-hover:translate-x-0 z-[100] shadow-2xl min-w-max">
-                                    <div className="flex flex-col whitespace-nowrap text-left">
-                                        <p className="font-black text-[10px] uppercase tracking-widest text-red-500">Sign Out</p>
-                                        <p className="text-[9px] text-white/40 font-bold uppercase tracking-tight">Close Session</p>
-                                    </div>
-                                    {/* Tooltip Arrow */}
-                                    <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#1A0A0A] border-l border-b border-red-500/10 rotate-45" />
                                 </div>
                             )}
                         </button>
