@@ -15,6 +15,11 @@ const nunitoSans = Nunito_Sans({
 export const metadata: Metadata = {
   title: "M. Rayan Arif | Senior Backend Engineer & AI Systems Architect",
   description: "Senior Backend Engineer and AI Systems Architect with 5 years of experience. Specializing in Python, Django, FastAPI, multi-agent AI systems, and LLM integrations.",
+  icons: {
+    icon: "/icon.png?v=2",
+    shortcut: "/favicon.ico?v=2",
+    apple: "/apple-icon.png?v=2",
+  },
 };
 
 export default function RootLayout({

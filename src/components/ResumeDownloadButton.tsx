@@ -8,8 +8,7 @@ interface ResumeDownloadButtonProps {
   variant?: "outline" | "filled";
 }
 
-const RESUME_URL =
-  "https://drive.google.com/uc?export=download&id=1ZvaTsMl4iefGdqCRIhuJNI6jytqE83kR";
+const RESUME_URL = "/api/resume";
 
 export const ResumeDownloadButton = ({ className, variant = "outline" }: ResumeDownloadButtonProps) => {
   const baseStyles =
@@ -23,8 +22,6 @@ export const ResumeDownloadButton = ({ className, variant = "outline" }: ResumeD
     <a
       href={RESUME_URL}
       download="Rayan_Arif_Resume.pdf"
-      target="_blank"
-      rel="noopener noreferrer"
       className={clsx(baseStyles, variantStyles, className)}
     >
       <FileText className="w-4 h-4" />
