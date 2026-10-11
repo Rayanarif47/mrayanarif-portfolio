@@ -20,6 +20,7 @@ export default function HirePage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -33,8 +34,20 @@ export default function HirePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    setSubmitting(false);
-    setSent(true);
+    setError("");
+    try {
+      const res = await fetch("/api/hire", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error();
+      setSent(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -194,6 +207,10 @@ export default function HirePage() {
                     className="w-4 h-4 rounded accent-[#FF3355] cursor-pointer" />
                   <span className="text-sm font-semibold text-white/80">I&apos;d like to book an introductory call</span>
                 </label>
+
+                {error && (
+                  <p className="text-sm text-center" style={{ color: "#FF3355" }}>{error}</p>
+                )}
 
                 {/* Submit */}
                 <motion.button
