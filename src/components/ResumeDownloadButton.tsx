@@ -9,7 +9,7 @@ interface ResumeDownloadButtonProps {
 }
 
 const RESUME_URL =
-  "https://drive.google.com/uc?export=download&id=1NwoXr4XIrsg5AMKeEeKBC7zLKlo87-xs";
+  "https://drive.google.com/uc?export=download&id=1ZvaTsMl4iefGdqCRIhuJNI6jytqE83kR";
 
 export const ResumeDownloadButton = ({ className, variant = "outline" }: ResumeDownloadButtonProps) => {
   const baseStyles =
